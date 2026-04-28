@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { 
-  GraduationCap, LayoutDashboard, History, LogOut, 
-  Bell, User, BookOpen, AlertTriangle, ExternalLink, 
-  Clock, Search, CheckCircle, XCircle 
+import {
+    GraduationCap, LayoutDashboard, History, LogOut,
+    Bell, User, BookOpen, AlertTriangle, ExternalLink,
+    Clock, Search, CheckCircle, XCircle
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import api from '../api';
@@ -31,10 +31,10 @@ const StudentDashboard = () => {
             if (res.data) {
                 const data = res.data;
                 setResults(data);
-                
+
                 // Kalkulimi i statistikave
                 const finished = data.filter(r => r.status === 'FINISHED');
-                const avg = finished.length > 0 
+                const avg = finished.length > 0
                     ? (finished.reduce((acc, curr) => acc + curr.score, 0) / finished.length).toFixed(1)
                     : 0;
                 const violationsCount = data.filter(r => r.violationLog && r.violationLog.trim() !== '').length;
@@ -59,7 +59,7 @@ const StudentDashboard = () => {
 
     useEffect(() => {
         fetchData();
-        
+
         const handleClickOutside = (event) => {
             if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
                 setShowProfileDropdown(false);
@@ -97,7 +97,7 @@ const StudentDashboard = () => {
         let start = new Date(startTimeRaw.endsWith('Z') ? startTimeRaw : startTimeRaw + 'Z');
         const durationMin = examInfo.duration || examInfo.Duration || 0;
         const end = new Date(start.getTime() + durationMin * 60000);
-        
+
         const now = new Date();
         if (now > end) {
             toast.error("Koha e provimit ka përfunduar (Expired). Nuk mund të hyni më.");
@@ -110,10 +110,10 @@ const StudentDashboard = () => {
         try {
             const userId = localStorage.getItem('userId') || '0';
             const res = await api.post(`/exam/join/${examInfo.id}`);
-            
+
             const token = localStorage.getItem('token') || '';
             const username = encodeURIComponent(localStorage.getItem('username') || 'Student');
-            
+
             // Tani dërgojmë sekondat te `duration` në vend të minutave totale
             const dpUrl = `seb://start?url=${encodeURIComponent(examInfo.url)}&duration=${remainingSeconds}&student=${username}&studentId=${userId}&examId=${examInfo.id}&token=${token}`;
             window.location.href = dpUrl;
@@ -127,7 +127,7 @@ const StudentDashboard = () => {
 
     return (
         <div style={{ display: 'flex', width: '100vw', height: '100vh', position: 'fixed', top: 0, left: 0, backgroundColor: '#F8FAFC', fontFamily: 'Inter, sans-serif' }}>
-            
+
             {/* SIDEBAR */}
             <aside style={{ width: '260px', backgroundColor: '#0F172A', color: '#94A3B8', display: 'flex', flexDirection: 'column' }}>
                 <div style={{ padding: '24px', display: 'flex', alignItems: 'center', gap: '12px', borderBottom: '1px solid #1E293B' }}>
@@ -151,13 +151,13 @@ const StudentDashboard = () => {
                     <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
                         <Bell size={20} color="#94A3B8" />
                         <div style={{ position: 'relative' }} ref={dropdownRef}>
-                            <div 
+                            <div
                                 onClick={() => setShowProfileDropdown(!showProfileDropdown)}
                                 style={{ width: '32px', height: '32px', backgroundColor: '#2563EB', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}
                             >
                                 <User size={16} color="white" />
                             </div>
-                            
+
                             {showProfileDropdown && (
                                 <div style={{ position: 'absolute', top: '45px', right: 0, width: '220px', backgroundColor: '#FFFFFF', borderRadius: '12px', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)', border: '1px solid #E2E8F0', overflow: 'hidden', zIndex: 100 }}>
                                     <div style={{ padding: '16px', textAlign: 'center', borderBottom: '1px solid #F1F5F9' }}>
@@ -168,7 +168,7 @@ const StudentDashboard = () => {
                                         <div style={{ fontSize: '12px', color: '#64748B', marginTop: '2px' }}>{localStorage.getItem('role') || 'STUDENT'}</div>
                                     </div>
                                     <div>
-                                        <button 
+                                        <button
                                             onClick={() => { localStorage.clear(); navigate('/login'); }}
                                             style={{ width: '100%', padding: '12px', border: 'none', backgroundColor: '#FFF1F2', color: '#E11D48', fontWeight: '600', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', fontSize: '14px' }}
                                         >
@@ -195,14 +195,14 @@ const StudentDashboard = () => {
 
                     <h1 style={{ fontSize: '28px', fontWeight: '800', color: '#0F172A', margin: 0 }}>Përshëndetje!</h1>
                     <p style={{ color: '#64748B', marginTop: '4px' }}>Mirëseerdhët në portalin tuaj të vlerësimit.</p>
-                    
+
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '20px', marginTop: '32px' }}>
                         <StatCard icon={BookOpen} label="Provime" value={stats.totalExams} color="#2563EB" />
                         <StatCard icon={AlertTriangle} label="Shkelje" value={stats.violations} color="#EF4444" />
                     </div>
 
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '30px', marginTop: '40px', maxWidth: '800px' }}>
-                        
+
                         {/* JOIN EXAM SECTION */}
                         <div style={{ backgroundColor: 'white', borderRadius: '16px', border: '1px solid #E2E8F0', padding: '30px' }}>
                             <h3 style={{ fontWeight: '800', fontSize: '18px', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '10px' }}>
@@ -211,15 +211,15 @@ const StudentDashboard = () => {
                             <p style={{ color: '#64748B', fontSize: '14px', marginBottom: '24px' }}>Shkruani kodin e provimit për të filluar vlerësimin.</p>
 
                             <div style={{ display: 'flex', gap: '12px' }}>
-                                <input 
-                                    type="text" 
+                                <input
+                                    type="text"
                                     placeholder="Shënoni kodin për të filluar testin"
                                     maxLength={6}
                                     value={code}
                                     onChange={(e) => setCode(e.target.value.toUpperCase())}
                                     style={{ flex: 1, padding: '14px', borderRadius: '10px', border: '1px solid #E2E8F0', fontSize: '16px', fontWeight: 'bold', letterSpacing: '2px', outline: 'none', textAlign: 'center' }}
                                 />
-                                <button 
+                                <button
                                     onClick={fetchExamByCode}
                                     disabled={fetchingExam}
                                     style={{ backgroundColor: '#2563EB', color: 'white', border: 'none', padding: '0 24px', borderRadius: '10px', cursor: 'pointer', fontWeight: 'bold' }}>
@@ -238,7 +238,7 @@ const StudentDashboard = () => {
                                             <Clock size={14} /> {examInfo.duration} Min
                                         </div>
                                     </div>
-                                    <button 
+                                    <button
                                         onClick={handleJoinExam}
                                         style={{ width: '100%', backgroundColor: '#10B981', color: 'white', border: 'none', padding: '12px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', transition: 'background 0.2s' }}>
                                         NIS PROVIMIN NË SEB
@@ -254,22 +254,22 @@ const StudentDashboard = () => {
 };
 
 const SidebarLink = ({ icon: Icon, label, active, onClick }) => (
-  <div 
-    onClick={onClick}
-    style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px', borderRadius: '8px', cursor: 'pointer', marginBottom: '4px', transition: 'background 0.2s', backgroundColor: active ? '#2563EB' : 'transparent', color: active ? 'white' : '#94A3B8' }}
-  >
-    <Icon size={18} /> <span style={{ fontSize: '14px', fontWeight: active ? '600' : '400' }}>{label}</span>
-  </div>
+    <div
+        onClick={onClick}
+        style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px', borderRadius: '8px', cursor: 'pointer', marginBottom: '4px', transition: 'background 0.2s', backgroundColor: active ? '#2563EB' : 'transparent', color: active ? 'white' : '#94A3B8' }}
+    >
+        <Icon size={18} /> <span style={{ fontSize: '14px', fontWeight: active ? '600' : '400' }}>{label}</span>
+    </div>
 );
 
 const StatCard = ({ icon: Icon, label, value, color, onClick }) => (
-  <div 
-    onClick={onClick}
-    style={{ backgroundColor: 'white', padding: '24px', borderRadius: '16px', border: '1px solid #E2E8F0', display: 'flex', alignItems: 'center', gap: '18px', cursor: onClick ? 'pointer' : 'default' }}
-  >
-    <div style={{ backgroundColor: `${color}10`, padding: '12px', borderRadius: '12px', color: color }}><Icon size={26} /></div>
-    <div><div style={{ fontSize: '22px', fontWeight: '800' }}>{value}</div><div style={{ fontSize: '11px', color: '#94A3B8', textTransform: 'uppercase' }}>{label}</div></div>
-  </div>
+    <div
+        onClick={onClick}
+        style={{ backgroundColor: 'white', padding: '24px', borderRadius: '16px', border: '1px solid #E2E8F0', display: 'flex', alignItems: 'center', gap: '18px', cursor: onClick ? 'pointer' : 'default' }}
+    >
+        <div style={{ backgroundColor: `${color}10`, padding: '12px', borderRadius: '12px', color: color }}><Icon size={26} /></div>
+        <div><div style={{ fontSize: '22px', fontWeight: '800' }}>{value}</div><div style={{ fontSize: '11px', color: '#94A3B8', textTransform: 'uppercase' }}>{label}</div></div>
+    </div>
 );
 
 export default StudentDashboard;
